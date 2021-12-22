@@ -3,7 +3,7 @@ const dbURL = 'mongodb://localhost:27017/TodoList'
 mongoose.connect(dbURL)
 
 const db = mongoose.connection
-const Todo = require('./todo')
+
 // console.log(Todo)
 
 
