@@ -6,7 +6,6 @@ const Todo = require('./todo')
 app.use(express.json())
 app.listen(3000, () => {
   console.log('server listening on')
-  
 })
 
 app.get('/tasks', (req, res) => {
@@ -21,7 +20,7 @@ app.get('/tasks', (req, res) => {
 })
 
 app.post('/tasks', (req, res) => {
-  console.log("23:" , req.body)
+  console.log('23:', req.body)
   Todo.create(req.body, (err, data) => {
     if (err) {
       console.log('Error: ', err)
@@ -30,4 +29,55 @@ app.post('/tasks', (req, res) => {
     }
   })
   // res.json('server is working')
+})
+
+app.put('/tasks/:title/:oldTitle', (req, res) => {
+  Todo.updateOne(
+    { title: req.params.oldTitle },
+    { title: req.body.newTitle },
+    (err, updateObj) => {
+      if (err) {
+        console.log('Error', err)
+        res.status(400).json('there was an error updateOne')
+      } else {
+        console.log(updateObj)
+
+        if (updateObj.matchedCount === 0) {
+          console.log('Error', err)
+          res.status(404).json('User Not Found')
+        } else {
+          console.log('===================')
+          // console.log("Created new user successfully" ,newData);
+          res
+            .status(200)
+            .json(
+              'Success updateOne ' +
+                req.params.oldTitle +
+                ' to ' +
+                req.body.newTitle
+            )
+        }
+      }
+    }
+  )
+})
+
+app.delete('/tasks/:title', (req, res) => {
+  Todo.deleteOne({ title: req.params.title }, (err, deleteObj) => {
+    if (err) {
+      console.log('Error', err)
+      res.status(400).json('there was an error deleting')
+    } else {
+      console.log(deleteObj)
+
+      if (deleteObj.deletedCount === 0) {
+        console.log('Error', err)
+        res.status(404).json('User Not Found')
+      } else {
+        console.log('===================')
+        // console.log("Created new user successfully" ,newData);
+        res.status(200).json('Success Delete ' + req.params.title)
+      }
+    }
+  })
 })
