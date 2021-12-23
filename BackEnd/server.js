@@ -18,7 +18,33 @@ app.get('/tasks', (req, res) => {
   })
   // res.json('server is working')
 })
-
+// ! we can use /filter/: if we want to
+// ! ex: filter?isCompleted=false  ||  ?key=value&key=value
+app.get('/filter', (req, res) => {
+  // console.log(req.query);
+  Todo.find({isCompleted : req.query.isCompleted }, (err, data) => {
+    if (err) {
+      console.log('Error: ', err)
+    } else {
+      res.json(data)
+    }
+  })
+  // res.json('server is working')
+})
+/* 
+!to represent data in a way the not repeated 
+!we use filter to make sure that we solve in the best way possible
+app.get('/notComplete', (req, res) => {
+  Todo.find({isCompleted : 'false'}, (err, data) => {
+    if (err) {
+      console.log('Error: ', err)
+    } else {
+      res.json(data)
+    }
+  })
+  // res.json('server is working')
+})
+*/
 app.post('/tasks', (req, res) => {
   console.log('23:', req.body)
   Todo.create(req.body, (err, data) => {
@@ -62,7 +88,7 @@ app.put('/Tasks/:oldTitle', (req, res) => {
   )
 })
 
-app.put('/tasks/:id', (req, res) => {
+app.put('/updateTasks/:id', (req, res) => {
   Todo.updateOne(
     { _id: req.params.id },
     { title: req.body.newTitle },
