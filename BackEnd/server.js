@@ -22,7 +22,7 @@ app.get('/tasks', (req, res) => {
 // ! ex: filter?isCompleted=false  ||  ?key=value&key=value
 app.get('/filter', (req, res) => {
   // console.log(req.query);
-  Todo.find({isCompleted : req.query.isCompleted }, (err, data) => {
+  Todo.find({ isCompleted: req.query.isCompleted }, (err, data) => {
     if (err) {
       console.log('Error: ', err)
     } else {
@@ -124,6 +124,29 @@ app.put('/updateTasks/:id', (req, res) => {
   )
 })
 
+// !    /updateValue/:id/:isCompleted // we can use both ways 
+app.put('/updateValue/:id', (req, res) => {
+  Todo.updateOne(
+    { _id: req.params.id },
+    //! WE can use {isCompleted : req.params.isCompleted} 
+    { isCompleted: req.body.newValue },
+    (err, updateObj) => {
+      if (err) {
+        console.log('Error', err)
+        res.status(400).json('there was an error updateOne')
+      } else {
+        console.log(updateObj)
+
+        {
+          updateObj.modifiedCount === 1
+            ? res.status(200).json('Success updateOne User')
+            : res.status(404).json('User Not Found')
+        }
+      }
+    }
+  )
+})
+
 app.delete('/tasks/:title', (req, res) => {
   Todo.deleteOne({ title: req.params.title }, (err, deleteObj) => {
     if (err) {
@@ -163,6 +186,22 @@ app.delete('/deleteTasks/:id', (req, res) => {
       //   // console.log("Created new user successfully" ,newData);
       //   res.status(200).json('Success Delete ' + req.params.id)
       // }
+    }
+  })
+})
+
+app.delete('/deleteAllTasks', (req, res) => {
+  Todo.deleteMany({ isCompleted: true }, (err, deleteObj) => {
+    if (err) {
+      console.log('Error', err)
+      res.status(400).json('there was an error deleting')
+    } else {
+      console.log(deleteObj)
+      {
+        deleteObj.deletedCount === 0
+          ? res.status(404).json('there is no task deleted')
+          : res.status(200).json('All tasks deleted successfully')
+      }
     }
   })
 })
