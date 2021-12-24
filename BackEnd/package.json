@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/HaithamSanari/Project-2-Todo-List#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.17.2",
     "mongoose": "^6.1.3"
   }
