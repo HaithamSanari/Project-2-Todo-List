@@ -4,12 +4,12 @@ const db = require('./db')
 const Todo = require('./todo')
 
 app.use(express.json())
-app.listen(3000, () => {
+app.listen(4000, () => {
   console.log('server listening on')
 })
 
 app.get('/tasks', (req, res) => {
-  Todo.find({}, (err, data) => {
+    Todo.find({}, (err, data) => {
     if (err) {
       console.log('Error: ', err)
     } else {
