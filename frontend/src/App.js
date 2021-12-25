@@ -16,12 +16,24 @@ function App() {
         console.log('error', err)
       })
   }
+  const deleteTasks = () => {
+    axios
+      .get('localhost:4000/deleteAllTasks')
+      .then((response) => {
+        // console.log('response', response)
+        console.log('Data', response.data)
+        setTasks(response.data)
+      })
+      .catch((err) => {
+        console.log('error', err)
+      })
+  }
   useEffect(() => {
     getData()
   }, [])
   // ! you can say title = {taskObj.title}
   const mapOverTasks = tasks.map((taskObj, i) => (
-      <Todo key={i} task={taskObj}  />
+      <Todo key={i} title={taskObj.title} isCompleted = {taskObj.isCompleted} _id = {taskObj._id}/>
     // task={taskObj._id} isCompleted={taskObj.isCompleted}
   ))
   /* {data.map(({body , completed , url , title} ,i)=>(
@@ -31,7 +43,7 @@ function App() {
   return (
     <div className='App'>
       <p>app</p>
-      {/* <button onClick={getData}>GET TASKS</button> */}
+      <button onClick={deleteTasks}>Delete TASKS</button>
       {mapOverTasks}
       {/* {tasks.map(({_id , title , isCompleted}, i)=>(
         <Todo key={i} title={title} _id={_id} isCompleted={isCompleted}/>
