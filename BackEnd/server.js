@@ -11,7 +11,7 @@ app.listen(4000, () => {
 })
 
 app.get('/tasks', (req, res) => {
-    Todo.find({}, (err, data) => {
+  Todo.find({}, (err, data) => {
     if (err) {
       console.log('Error: ', err)
     } else {
@@ -126,12 +126,12 @@ app.put('/updateTasks/:id', (req, res) => {
   )
 })
 
-// !    /updateValue/:id/:isCompleted // we can use both ways 
-app.put('/updateValue/:id', (req, res) => {
+// !    /updateValue/:id/:isCompleted // we can use both ways
+app.put('/updateValue/:id/:isCompleted', (req, res) => {
   Todo.updateOne(
     { _id: req.params.id },
-    //! WE can use {isCompleted : req.params.isCompleted} 
-    { isCompleted: req.body.newValue },
+    //! WE can use {isCompleted : req.params.isCompleted}
+    { isCompleted: req.params.isCompleted },
     (err, updateObj) => {
       if (err) {
         console.log('Error', err)
