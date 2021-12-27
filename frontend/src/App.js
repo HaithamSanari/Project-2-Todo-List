@@ -20,12 +20,23 @@ function App() {
         console.log('error', err)
       })
   }
-  // const deleteTodo = (id) => {
+  const filterData = (status) => {
+    axios
+      .get(`http://localhost:4000/filter?isCompleted=${status}`)
+      .then((response) => {
+        // console.log('response', response)
+        console.log('Data', response.data)
+        setTasks(response.data)
+      })
+      .catch((err) => {
+        console.log('error', err)
+      })
+  }
+  // const deleteTasks= () => {
   //   // console.log('deleteData')
 
   //   axios
-  //     // eslint-disable-next-line no-template-curly-in-string
-  //     .delete('http://localhost:4000/deleteTasks/${id}')
+  //     .delete('http://localhost:4000/deleteAllTasks')
   //     .then((response) => {
   //       // console.log('response', response)
   //       console.log('Data', response.data)
@@ -37,6 +48,21 @@ function App() {
   //     })
   // }
 
+  const deleteTasks = () => {
+    // console.log("object")
+    axios
+      .delete(`http://localhost:4000/deleteAllTasks`)
+      //     (`http://localhost:5000/tasks/${id}`)
+      .then((response) => {
+        // console.log('RESPONSE: ', response);
+        console.log("DATA: ", response.data);
+        getData();
+        // change react hooks state using spread operator
+      })
+      .catch((err) => {
+        console.log("ERR: ", err);
+      });
+  };
   const deleteTodo = (id) => {
     axios
       .delete(`http://localhost:4000/deleteTasks/${id}`)
@@ -101,7 +127,7 @@ function App() {
   }, [])
   // ! you can say title = {taskObj.title}
   const mapOverTasks = tasks.map((taskObj, i) => (
-    <Todo key={i} task={taskObj} deleteTodo={deleteTodo} toggleTodo={toggleTodo}/>
+    <Todo key={taskObj._id} task={taskObj} deleteTodo={deleteTodo} toggleTodo={toggleTodo}/>
     // task={taskObj._id} isCompleted={taskObj.isCompleted}
   ))
   /* {data.map(({body , completed , url , title} ,i)=>(
@@ -111,7 +137,14 @@ function App() {
   return (
     <div className='App'>
       <p>app</p>
-      {/* <button onClick={deleteTasks}>Delete TASKS</button> */}
+      <button onClick={getData}>GET DATA </button>
+      <button onClick={deleteTasks}>DELETE Completed tasks </button>
+      <button onClick={() =>{
+        filterData(true)
+      }}>GET DONE </button>
+      <button onClick={() =>{
+        filterData(false)
+      }}> GET PENDING </button>
       <Add createFunc={addData} />
       {/* <Delete createFunc={deleteData}/> */}
       {mapOverTasks}
