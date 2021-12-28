@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import Todo from './components/Todo'
 import Add from './components/Add'
-// import Delete from './components/Delete'
 import './App.css'
 function App() {
   const [tasks, setTasks] = useState([])

@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const db = require('./db')
 const Todo = require('./todo')
+const user = require('./User')
 const cors = require('cors')
 
 app.use(express.json())
@@ -19,6 +20,16 @@ app.get('/tasks', (req, res) => {
     }
   })
   // res.json('server is working')
+})
+app.get('/user', (req, res) => {
+  user.find({}, (err, data) => {
+    if (err) {
+      console.log('Error: ', err)
+      res.status(404).json({ message: 'user not found' })
+    } else {
+      res.json(data)
+    }
+  })
 })
 // ! we can use /filter/: if we want to
 // ! ex: filter?isCompleted=false  ||  ?key=value&key=value
@@ -57,6 +68,46 @@ app.post('/tasks', (req, res) => {
     }
   })
   // res.json('server is working')
+})
+app.post('/users/register', (req, res) => {
+  user.create(req.body, (err, newUser) => {
+    if (err) {
+      // console.log("ERROR: ", err);
+      res.status(400).json({ message: 'This email already taken' })
+    } else {
+      // res.status(201).json(newUser);
+      res.status(201).json({ message: 'Create New User Successfully' })
+    }
+  })
+})
+// User
+app.post('/users/login', (req, res) => {
+  user.find({ email: req.body.email }, (err, arrUserFound) => {
+    if (err) {
+      console.log('ERROR: ', err)
+    } else {
+      // console.log(arrUserFound);
+      if (arrUserFound.length === 1) {
+        // we found the user
+        if (req.body.password === arrUserFound[0].password) {
+          // password correct
+          res.status(200).json({
+            message: 'Login Successfully',
+            username: arrUserFound[0].username,
+          })
+        } else {
+          // password incorrect
+          res.status(400).json({
+            message: 'Wrong password',
+          })
+        }
+      } else {
+        res.status(404).json({
+          message: 'The email entered is not registered',
+        })
+      }
+    }
+  })
 })
 
 app.put('/Tasks/:oldTitle', (req, res) => {
