@@ -3,15 +3,14 @@
   margin: 5px;
 }
 
-.Todo {
+.Login{
   border: blue solid 3px;
-  margin: 5px;
   padding: 5px;
 }
 .Todo span {
   margin: 0px 10px 20px 10px;
   
 }
-.Add {
+.register {
   border: purple solid 3px;
 }
