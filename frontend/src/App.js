@@ -4,10 +4,12 @@ import Todo from './components/Todo'
 import Add from './components/Add'
 import Register from './components/Register'
 import Login from './components/Login'
+import { Routes, Route, Link } from 'react-router-dom'
 import './App.css'
 function App() {
   const [tasks, setTasks] = useState([])
-  const [isLoginPage, setIsLoginPage] = useState(true)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [username, setUsername] = useState('')
   // const [addTasks, setAddTasks] = useState([])
   // const [deleteTasks, setDeleteTasks] = useState([])
   const getData = () => {
@@ -108,6 +110,7 @@ function App() {
       })
   }
   // const Register = () => {
+
   //   axios
   //     .put(`http://localhost:4000/users/register`)
   //     .then((response) => {
@@ -121,6 +124,10 @@ function App() {
   //     });
   // };
 
+  const logoutFunc = () => {
+    setIsLoggedIn(false)
+    setUsername('')
+  }
   const addData = (body) => {
     // console.log("new data");
     // {"title":"task 5","isCompleted": false}
@@ -157,34 +164,86 @@ function App() {
   return (
     <div className='App'>
       <p>app</p>
-      <button onClick={getData}>GET DATA </button>
-      <button onClick={deleteTasks}>DELETE Completed tasks </button>
-      <button
-        onClick={() => {
-          filterData(true)
-        }}
-      >
-        GET DONE{' '}
+      <p>Name: {username}</p>
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">
+            Todos
+          </a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <Link to="/home" className="nav-link">
+                  Home
+                </Link>
+              </li>
+              <li class="nav-item">
+                <Link to="/login" className="nav-link">
+                  Login
+                </Link>
+              </li>
+              <li class="nav-item">
+                <Link to="/register" className="nav-link">
+                  Register
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </div>
+        </nav>
+      <br />
+      <button onClick={logoutFunc} className='btn-danger'>
+        Logout
       </button>
-      <button
-        onClick={() => {
-          filterData(false)
-        }}
-      >
-        {' '}
-        GET PENDING{' '}
-      </button>
-      {/* <Add createFunc={addData} /> */}
-      {/* <button onClick={Register}>Register </button> */}
-      {/* <Login/> */}
-      {/* <Delete createFunc={deleteData}/> */}
-      {/* {mapOverTasks} */}
-      <Register/>
-      {/* {tasks.map(({_id , title , isCompleted}, i)=>(
-        <Todo key={i} title={title} _id={_id} isCompleted={isCompleted}/>
-      ))} */}
+      <Routes>
+        <Route
+          path='/home'
+          element={
+            <div>
+              <button onClick={getData}>GET DATA </button>
+              <button onClick={deleteTasks}>DELETE Completed tasks </button>
+              <button
+                onClick={() => {
+                  filterData(true)
+                }}
+              >
+                GET DONE{' '}
+              </button>
+              <button
+                onClick={() => {
+                  filterData(false)
+                }}
+              >
+                {' '}
+                GET PENDING{' '}
+              </button>
+              <Add createFunc={addData} />
+              {mapOverTasks}
+            </div>
+          }
+        />
+        <Route
+          path='login'
+          element={
+            <Login setIsLoggedIn={setIsLoggedIn} setUsername={setUsername} />
+          }
+        />
+        <Route path='register' element={<Register />} />
+      </Routes>
 
-      {isLoginPage ? (
+      <div>
+        {/* {isLoginPage ? (
         <>
           <Login />
           <button
@@ -206,7 +265,8 @@ function App() {
             Go to Login
           </button>
         </>
-      )}
+      )} */}
+      </div>
     </div>
   )
 }
